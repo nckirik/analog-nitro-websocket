@@ -1,10 +1,3 @@
-# Analog App for Nitro Websockets
-Currently websockets are closing on the server side without client is informed.
-Nitro is triggering its `upgrade` routines and running `open` hook for the route.
-But immediately after that socket closes with the code: 1006 on the server side, and client just times out.
-
-The problem is 
-
 # Analog Project with Nitro WebSocket Support
 
 This repository demonstrates the integration of Nitro's WebSocket support in an Analog project. While the WebSocket functionality works flawlessly in a standalone Nitro setup, it encounters issues when used with the Vite plugin for Nitro within the Analog framework.
