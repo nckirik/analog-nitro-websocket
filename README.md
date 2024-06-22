@@ -8,7 +8,7 @@ Run `npm install` to install the application dependencies.
 
 ## Development
 
-Run `npm start` for a dev server. Navigate to `http://localhost:5173/`. The application automatically reloads if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:5000/`. The application automatically reloads if you change any of the source files.
 
 ## Build
 
