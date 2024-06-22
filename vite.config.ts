@@ -11,7 +11,21 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     mainFields: ['module'],
   },
-  plugins: [analog()],
+  server: {
+    hmr: {
+      port: 5001,
+      path: 'vite-hmr',
+    },
+  },
+  plugins: [
+    analog({
+      nitro: {
+        experimental: {
+          websocket: true,
+        },
+      },
+    }),
+  ],
   test: {
     globals: true,
     environment: 'jsdom',

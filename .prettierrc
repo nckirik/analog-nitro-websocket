@@ -1,0 +1,24 @@
+{
+  "experimentalTernaries": false,
+  "printWidth": 140,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "consistent",
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "endOfLine": "auto",
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": false,
+
+  "overrides": [
+    { "files": ["*.ts", "*.tsx"], "options": { "parser": "babel-ts" } },
+    { "files": ["*.js", "*.jsx"], "options": { "parser": "babel" } },
+    { "files": ["*.json"], "options": { "parser": "json" } }
+  ]
+}
