@@ -28,9 +28,9 @@ pnpm install
 ```
 ### Run
 * `pnpm start`
-* go to `localhost:5000`
-* click to `Connect` button on the top right
-* follow browser and terminal messages
+* Go to `localhost:5000`
+* Click to `Connect` button on the top right
+* Follow browser's console and terminal messages
 
 ## 
 
