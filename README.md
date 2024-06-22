@@ -1,26 +1,48 @@
-# Analog App
+# Analog App for Nitro Websockets
+Currently websockets are closing on the server side without client is informed.
+Nitro is triggering its `upgrade` routines and running `open` hook for the route.
+But immediately after that socket closes with the code: 1006 on the server side, and client just times out.
 
-This project was generated with [Analog](https://analogjs.org), the fullstack meta-framework for Angular.
+The problem is 
 
-## Setup
+# Analog Project with Nitro WebSocket Support
 
-Run `npm install` to install the application dependencies.
+This repository demonstrates the integration of Nitro's WebSocket support in an Analog project. While the WebSocket functionality works flawlessly in a standalone Nitro setup, it encounters issues when used with the Vite plugin for Nitro within the Analog framework.
 
-## Development
+## Problem Statement
 
-Run `npm start` for a dev server. Navigate to `http://localhost:5000/`. The application automatically reloads if you change any of the source files.
+In this setup, WebSockets close unexpectedly on the server side without informing the client. The `upgrade` routine in Nitro is triggered, and the `open` hook for the route is executed. However, the connection is then immediately closed with code 1006, causing the client to timeout.
 
-## Build
+## Investigation
 
-Run `npm run build` to build the client/server project. The client build artifacts are located in the `dist/analog/public` directory. The server for the API build artifacts are located in the `dist/analog/server` directory.
+Efforts to debug this issue involved:
+- Diving into both Analog's and Nitro's codebases.
+- Tracing the WebSocket connection lifecycle.
+- Comparing the behavior between a standalone Nitro setup and one using the Vite plugin for Nitro.
 
-## Test
+Despite these efforts, the root cause of the issue remains unidentified (at least for me for now)
 
-Run `npm run test` to run unit tests with [Vitest](https://vitest.dev).
+## Related Repositories
+- [`standalone-nitro-websocket`](https://github.com/nckirik/nitro-websocket): A sample project demonstrating working WebSocket support in a standalone Nitro setup.
+- `nitro-with-analog-plugin`: *(this repo)* A sample project demonstrating the WebSocket issue when using the Vite plugin for Nitro within Analog.
 
-## Community
+## Installation and Running the Project
+### Install
+```
+git clone https://github.com/nckirik/analog-nitro-websocket
+cd analog-nitro-websocket
+pnpm install
+```
+### Run
+* `pnpm start`
+* go to `localhost:5000`
+* click to `Connect` button on the top right
+* follow browser and terminal messages
 
-- Visit and Star the [GitHub Repo](https://github.com/analogjs/analog)
-- Join the [Discord](https://chat.analogjs.org)
-- Follow us on [Twitter](https://twitter.com/analogjs)
-- Become a [Sponsor](https://github.com/sponsors/brandonroberts)
+## 
+
+## Contributions
+If you have any insights or potential fixes for this issue, please feel free to open a pull request or an issue on this repository. Your contributions are highly appreciated. 
+
+## License
+This project is licensed under the MIT License.
