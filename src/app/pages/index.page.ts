@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, WritableSignal, computed, signal } from '@angular/core';
 import { uniqueNamesGenerator as uGenerator, names as uNames } from 'unique-names-generator';
 
 //import { FormsModule, NgForm } from '@angular/forms';
@@ -13,7 +13,13 @@ import { type ChatMessage, ConnectionStatus } from '../../types';
   template: `
     <div class="flex flex-column h-100">
       <div class="container flex h-2rem border-group">
-        <input class="border flex-1" placeholder="Enter a Username" [readonly]="!isDisconnected()" [(value)]="userName" />
+        <input
+          class="border flex-1"
+          placeholder="Enter a Username"
+          [readonly]="!isDisconnected()"
+          [value]="userName()"
+          (change)="setSignalValue(userName, $event)"
+        />
         <div class="border flex-1 bg-white p-1">{{ status() }}</div>
         <button class="border bg-blue" style="width: 8rem" [disabled]="isConnecting()" (click)="connect()" [class]="statusClass()">
           {{ isConnected() ? 'Disconnect' : 'Connect' }}
@@ -37,7 +43,13 @@ import { type ChatMessage, ConnectionStatus } from '../../types';
         }
       </div>
       <div class="container flex h-2rem border-group">
-        <input class="border flex-1 bg-white" placeholder="Enter a Message" [readonly]="!isConnected()" [(value)]="message" />
+        <input
+          class="border flex-1 bg-white"
+          placeholder="Enter a Message"
+          [readonly]="!isConnected()"
+          [value]="message()"
+          (change)="setSignalValue(message, $event)"
+        />
         <button class="border bg-blue" style="width: 8rem" [disabled]="!isConnected()" (click)="send()">Send</button>
       </div>
     </div>
@@ -55,8 +67,9 @@ export default class HomeComponent {
     return 'bg-red';
   });
 
-  userName = model<string>('');
-  message = model<string>('');
+  userName = signal<string>('');
+  message = signal<string>('');
+  setSignalValue = (signal: WritableSignal<string>, event: Event) => signal.set((event.target as HTMLInputElement)?.value ?? '');
 
   ws: WebSocket | undefined;
 
