@@ -35,7 +35,8 @@ pnpm install
 ## 
 
 ## Contributions
-If you have any insights or potential fixes for this issue, please feel free to open a pull request or an issue on this repository. Your contributions are highly appreciated. 
+If you have any insights or potential fixes for this issue, please feel free to open a pull request or an issue on this repository. Your contributions are highly appreciated.
+Also the discussion for this problem on Discord is here: https://discord.com/channels/994618831987290112/1254223609908560033
 
 ## License
 This project is licensed under the MIT License.
