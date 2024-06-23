@@ -28,8 +28,8 @@ import { type ChatMessage, ConnectionStatus } from '../../types';
       <div class="container flex-1 border bg-white p-1">
         @if (messages(); as messages) {
           @for (message of messages; track message) {
-            @if (message.userName === 'Server') {
-              <div class="info">Server: {{ message.text }}</div>
+            @if (['Server', 'Client'].includes(message.userName)) {
+              <div class="info">{{ message.userName }}: {{ message.text }}</div>
             } @else {
               <div class="container border-group flex message">
                 <div class="border">{{ message.userName }}</div>
@@ -38,8 +38,6 @@ import { type ChatMessage, ConnectionStatus } from '../../types';
               </div>
             }
           }
-        } @else {
-          <div><em>Not Connected</em></div>
         }
       </div>
       <div class="container flex h-2rem border-group">
@@ -56,7 +54,7 @@ import { type ChatMessage, ConnectionStatus } from '../../types';
   `,
 })
 export default class HomeComponent {
-  messages = signal<ChatMessage[] | undefined>(undefined);
+  messages = signal<ChatMessage[]>([]);
   status = signal<ConnectionStatus>(ConnectionStatus.Disconnected);
   isConnected = computed(() => this.status() === ConnectionStatus.Connected);
   isConnecting = computed(() => this.status() === ConnectionStatus.Connecting);
@@ -75,6 +73,7 @@ export default class HomeComponent {
 
   constructor() {
     this.userName.set(uGenerator({ dictionaries: [uNames] }));
+    this.addClientMessage('Not connected');
   }
 
   connect() {
@@ -86,6 +85,7 @@ export default class HomeComponent {
       return;
     }
 
+    this.addClientMessage('Connecting to Server...');
     this.status.set(ConnectionStatus.Connecting);
 
     const isSecure = location.protocol === 'https:';
@@ -104,8 +104,13 @@ export default class HomeComponent {
     if (!this.message()) return;
   }
 
+  addClientMessage(text: string) {
+    this.messages.update((messages) => [...messages, { userName: 'Client', text, timestamp: new Date() }]);
+  }
+
   onWsOpen(event: Event) {
     console.info('WS Open', event);
+    this.addClientMessage('Connected to Server');
     this.status.set(ConnectionStatus.Connected);
   }
 
@@ -125,17 +130,19 @@ export default class HomeComponent {
 
       data = parsed;
     }
-    this.messages.update((messages) => [...(messages ?? []), data]);
+    this.messages.update((messages) => [...messages, data]);
   }
 
   onWsClose(event: CloseEvent) {
     console.info('WS Closed', event.code, event.reason);
+    this.addClientMessage('Disconnected from Server');
 
     if (this.ws) this.ws = undefined;
   }
 
   onWsError(event: Event) {
     console.error('WS Error', event);
+    this.addClientMessage('Connection Error:');
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       this.status.set(ConnectionStatus.Disconnected);
     }
