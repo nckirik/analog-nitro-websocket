@@ -79,9 +79,7 @@ function getUserName(peer: Peer) {
 }
 
 function garbageCollect() {
-  const newMessages = messages.filter(
-    (m) => m.timestamp > new Date(Date.now() - 5 * 60 * 1000)
-  );
+  const newMessages = messages.filter((m) => m.timestamp > new Date(Date.now() - 5 * 60 * 1000));
 
   messages.length = 0;
   messages.push(...newMessages);
