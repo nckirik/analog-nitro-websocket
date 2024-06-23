@@ -99,9 +99,13 @@ export default class HomeComponent {
   }
 
   send() {
-    if (!this.isConnected()) return;
-    if (!this.userName()) return;
-    if (!this.message()) return;
+    if (!this.ws || !this.isConnected()) return;
+
+    const message = this.message();
+    if (!message) return;
+
+    this.ws.send(message);
+    this.message.set(''); // Clear the input after sending
   }
 
   addClientMessage(text: string) {
