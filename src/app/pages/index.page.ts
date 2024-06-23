@@ -70,6 +70,7 @@ export default class HomeComponent {
   setSignalValue = (signal: WritableSignal<string>, event: Event) => signal.set((event.target as HTMLInputElement)?.value ?? '');
 
   ws: WebSocket | undefined;
+  wsTimeout: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     this.userName.set(uGenerator({ dictionaries: [uNames] }));
@@ -77,10 +78,8 @@ export default class HomeComponent {
   }
 
   connect() {
-    if (this.ws) this.ws.close();
-    this.ws = undefined;
-
-    if (this.isConnected()) {
+    if (this.ws || this.isConnected()) {
+      this.ws?.close();
       this.status.set(ConnectionStatus.Disconnected);
       return;
     }
@@ -88,8 +87,17 @@ export default class HomeComponent {
     this.addClientMessage('Connecting to Server...');
     this.status.set(ConnectionStatus.Connecting);
 
-    const isSecure = location.protocol === 'https:';
-    const url = (isSecure ? 'wss://' : 'ws://') + location.host + '/api/ws/chat?userName=' + this.userName();
+    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const url = `${protocol}//${location.host}/api/ws/chat?userName=${this.userName()}`;
+
+    this.wsTimeout = setTimeout(() => {
+      if (this.status() === ConnectionStatus.Connecting) {
+        console.error('WS timed out');
+        this.addClientMessage('Connection timed out');
+        this.status.set(ConnectionStatus.Disconnected);
+        if (this.ws) this.ws.close();
+      }
+    }, 5000); // 10 seconds timeout
 
     this.ws = new WebSocket(url);
     this.ws.addEventListener('open', (event) => this.onWsOpen(event));
@@ -113,6 +121,7 @@ export default class HomeComponent {
   }
 
   onWsOpen(event: Event) {
+    if (this.wsTimeout) clearTimeout(this.wsTimeout);
     console.info('WS Open', event);
     this.addClientMessage('Connected to Server');
     this.status.set(ConnectionStatus.Connected);
