@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, WritableSignal, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, WritableSignal, computed, signal } from '@angular/core';
 import { uniqueNamesGenerator as uGenerator, names as uNames } from 'unique-names-generator';
 
 //import { FormsModule, NgForm } from '@angular/forms';
@@ -106,6 +106,7 @@ export default class HomeComponent {
     this.ws.addEventListener('error', (event) => this.onWsError(event));
   }
 
+  @HostListener('window:keydown.Enter')
   send() {
     if (!this.ws || !this.isConnected()) return;
 
