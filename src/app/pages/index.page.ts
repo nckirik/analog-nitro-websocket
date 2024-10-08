@@ -97,7 +97,7 @@ export default class HomeComponent {
         this.status.set(ConnectionStatus.Disconnected);
         if (this.ws) this.ws.close();
       }
-    }, 5000); // 10 seconds timeout
+    }, 5000); // 5 seconds timeout
 
     this.ws = new WebSocket(url);
     this.ws.addEventListener('open', (event) => this.onWsOpen(event));
